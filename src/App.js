@@ -30,13 +30,21 @@ class App extends Component {
   }
 
   getVehicles() {
-    // axios (GET)
-    // setState with response -> vehiclesToDisplay
+    let promise = axios.get('https://joes-autos.herokuapp.com/api/vehicles')
+      promise.then(response => {
+        this.setState({
+          vehiclesToDisplay: response.data
+        })
+      })
   }
 
   getPotentialBuyers() {
-    // axios (GET)
-    // setState with response -> buyersToDisplay
+    let promise = axios.get('https://joes-autos.herokuapp.com/api/buyers')
+      promise.then(response => {
+        this.setState({
+          buyersToDisplay: response.data
+        })
+      })
   }
 
   sellCar(id) {
@@ -54,9 +62,21 @@ class App extends Component {
     let color = this.refs.selectedColor.value;
     // axios (GET)
     // setState with response -> vehiclesToDisplay
+    let promise = axios.get('https://joes-autos.herokuapp.com/api/vehicles?color=' + color)
+    promise.then(res => {
+      this.setState({
+        vehiclesToDisplay: res.data
+      })
+    })
   }
 
-  updatePrice(priceChange) {
+  updatePrice(priceChange, id) {
+    let promise = axios.put('https://joes-autos.herokuapp.com/api/vehicles/'+id+'/'+priceChange)
+      promise.then(res => {
+        this.setState({
+          vehiclesToDisplay:res.data.vehicles
+        })
+      })
     // axios (PUT)
     // setState with response -> vehiclesToDisplay
   }
@@ -71,6 +91,12 @@ class App extends Component {
   }  
   // axios (POST)
   // setState with response -> vehiclesToDisplay
+  let promise = axios.post('https://joes-autos.herokuapp.com/api/vehicles', newCar)
+  promise.then(res => {
+    this.setState({
+      vehiclesToDisplay: res.data.vehicles
+    })
+  })
 }
 
 addBuyer() {
@@ -93,6 +119,12 @@ byYear() {
   let year = this.refs.searchYear.value;
   // axios (GET)
   // setState with response -> vehiclesToDisplay
+  let promise = axios.get('https://joes-autos.herokuapp.com/api/vehicles?year='+year)
+  promise.then(res => {
+    this.setState({
+      vehiclesToDisplay: res.data
+    })
+  })
 }
 
 // ==============================================
@@ -126,11 +158,11 @@ resetData(dataToReset) {
           <p>Price: { v.price }</p>
           <button
             className='btn btn-sp'
-            onClick={ () => this.updatePrice('up') }
+            onClick={ () => this.updatePrice('up', v.id) }
             >Increase Price</button>
           <button
             className='btn btn-sp'
-            onClick={ () => this.updatePrice('down') }
+            onClick={ () => this.updatePrice('down', v.id) }
             >Decrease Price</button>  
           <button 
             className='btn btn-sp'
